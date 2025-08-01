@@ -2,57 +2,127 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.StyledDocument;
 
+import javafx.scene.layout.BorderRepeat;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Layout {
 
     public static void main(String[] args) {
         System.out.println("Olá Mundo GUI");
 
-        JFrame frame = new JFrame("Informações");
+        JFrame frame = new JFrame("Carros Esportivos");
 
-        frame.setSize(400, 350);
+        frame.setSize(400, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel();
-        panel.setBackground(Color.lightGray);
-        panel.setLayout(new BorderLayout());
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(new Color(15, 45, 100));
 
-        JButton button = new JButton("Clique para salvar o carro que informou!");
+        
+        JLabel label = new JLabel("Escolha seu carro esportivo favorito!");
+        label.setForeground(Color.WHITE);
+        label.setFont(new Font("Arial", Font.ITALIC, 18));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
+
+        String[] carros = {
+            "Ferrari 488 Spider",
+            "Lamborghini Huracán",
+            "McLaren 720S",
+            "Audi R8",
+            "Nissan GT-R",
+            "Porsche 911 GT3-RS",
+            "Bugatti Tourbillon"
+        };
+
+        JComboBox<String> comboCarros = new JComboBox<>(carros);
+        comboCarros.setFont(new Font("Arial", Font.ITALIC, 20));
+
+        Map<String, String> mapaImagens = new HashMap<>();
+        mapaImagens.put("Ferrari 488 Spider", "ferrari.jpg");
+        mapaImagens.put("Lamborghini Huracán", "lambo.jpg");
+        mapaImagens.put("McLaren 720S", "mclaren2.png");
+        mapaImagens.put("Audi R8", "audi.jpg");
+        mapaImagens.put("Nissan GT-R", "nissan.jpg");
+        mapaImagens.put("Porsche 911 GT3-RS", "porsche.jpeg");
+        mapaImagens.put("Bugatti Tourbillon", "bugatti.jpg");
+
+        JLabel imagemLabel = new JLabel();
+        imagemLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        Runnable atualizarImagem = () -> {
+            String carro = (String) comboCarros.getSelectedItem();
+            String caminhoImg = mapaImagens.get(carro);
+            
+            if (caminhoImg != null){
+                ImageIcon icon =  new ImageIcon(caminhoImg);
+                int largura = 700;
+                int altura = 500;
+                Image img = icon.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
+                imagemLabel.setIcon(new ImageIcon(img));
+                imagemLabel.setPreferredSize(new Dimension(largura, altura));
+            } else {
+                imagemLabel.setIcon(null);
+                imagemLabel.setPreferredSize(null);
+            }
+        };
+
+        comboCarros.addActionListener(e -> atualizarImagem.run());
+        atualizarImagem.run();
+
+
+        JButton button = new JButton("Salvar");
+        button.setFont(new Font("Verdana", Font.BOLD, 13));
         button.setForeground(Color.BLACK);
-        button.setBackground(Color.RED);
+        button.setBackground(new Color(150, 190, 255));
         button.setPreferredSize(new Dimension(100, 30));
+        button.setContentAreaFilled(true);
 
-        JTextField textField = new JTextField(10);
-        textField.setFont(new Font("Serif", Font.ITALIC, 28));
-        button.addActionListener(e -> {
-            JOptionPane.showMessageDialog(null, textField.getText(), "Titulo", 1);
+
+        button.addActionListener(e ->{
+            String carroEscolhido = comboCarros.getSelectedItem().toString();
+
+            if (carroEscolhido.toLowerCase().contains("porsche")){
+            JOptionPane.showMessageDialog(null, "Ótima escolha, você tem mesmo bom gosto!", "Carro Salvo", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(null, carroEscolhido+ " Legal... Mas, todo mundo sabe que Porsche é melhor, rs!", "Carro Salvo", JOptionPane.INFORMATION_MESSAGE);
+            }
         });
 
-        JLabel label = new JLabel("Diga seu carro favorito:");
-        label.setFont(new Font("Serif", Font.ITALIC, 28));
 
-        JTextPane textPane = new JTextPane();
-        StyledDocument doc = textPane.getStyledDocument();
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        comboCarros.setAlignmentX(Component.CENTER_ALIGNMENT);
+        button.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        ImageIcon icon = new ImageIcon("carro.jpg");
-        JLabel imageLabel = new JLabel(icon);
+
+        JPanel painelEscolha = new JPanel();
+        painelEscolha.setLayout(new BoxLayout(painelEscolha, BoxLayout.Y_AXIS));
+        painelEscolha.setOpaque(false);
+        painelEscolha.add(label);
+        painelEscolha.add(Box.createRigidArea(new Dimension(0, 10)));
+        painelEscolha.add(comboCarros);
+        painelEscolha.add(Box.createRigidArea(new Dimension(0, 10)));
+        painelEscolha.add(button);
+
+        JPanel painelCentral = new JPanel(new FlowLayout());
+        painelCentral.setOpaque(false);
+        painelCentral.setLayout((new FlowLayout(FlowLayout.CENTER, 20, 10)));
+
+        JPanel painelImagem = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        painelImagem.setOpaque(false);
+        painelImagem.add(imagemLabel);
+        painelImagem.setBorder(BorderFactory.createEmptyBorder(0, 0, 250, 0));
+
         
-         
-        //JTextArea textArea = new JTextArea("Veja carros novos!");
-        //JTextArea textArea1 = new JTextArea("Hoje esta frio!");
-
-        JPanel formPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        formPanel.add(label);
-        formPanel.add(textField);
-        panel.add(imageLabel, BorderLayout.CENTER);
-        panel.add(formPanel, BorderLayout.NORTH);
-        panel.add(button, BorderLayout.SOUTH);
-        //panel.add(textArea1, BorderLayout.CENTER);
+        painelCentral.add(painelEscolha);
+        panel.add(painelCentral, BorderLayout.CENTER);
+        panel.add(painelImagem, BorderLayout.SOUTH);
    
         frame.add(panel);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-
-     
 
     }
 }
