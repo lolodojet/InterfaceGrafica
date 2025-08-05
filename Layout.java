@@ -1,9 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.text.StyledDocument;
-
 import javafx.scene.layout.BorderRepeat;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +47,11 @@ public class Layout {
         mapaImagens.put("Porsche 911 GT3-RS", "porsche.jpeg");
         mapaImagens.put("Bugatti Tourbillon", "bugatti.jpg");
 
+
+
+
+        
+
         JLabel imagemLabel = new JLabel();
         imagemLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -62,7 +65,7 @@ public class Layout {
                 int altura = 500;
                 Image img = icon.getImage().getScaledInstance(largura, altura, Image.SCALE_SMOOTH);
                 imagemLabel.setIcon(new ImageIcon(img));
-                imagemLabel.setPreferredSize(new Dimension(largura, altura));
+                imagemLabel.setPreferredSize(new Dimension(largura, altura));         
             } else {
                 imagemLabel.setIcon(null);
                 imagemLabel.setPreferredSize(null);
@@ -71,7 +74,6 @@ public class Layout {
 
         comboCarros.addActionListener(e -> atualizarImagem.run());
         atualizarImagem.run();
-
 
         JButton button = new JButton("Salvar");
         button.setFont(new Font("Verdana", Font.BOLD, 13));
